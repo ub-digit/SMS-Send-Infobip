@@ -38,6 +38,10 @@ our $VERSION = '0.01';
 
 =cut
 
+=head1 DESCRIPTION
+
+An SMS::Send driver providing integration with the Infobib SMS API.
+
 =head1 METHODS
 
 =head2 new
@@ -46,7 +50,9 @@ our $VERSION = '0.01';
         _apikey => 'apikey',
         _sender => 'Sender',
         _baseurl => '<identifier>.api.infobip.com',
-        _timeout => 60
+        _timeout => 60,
+        _to_override => '41793026728',
+        _skip_send => 1
     );
 
 =head3 Parameters
@@ -59,7 +65,11 @@ our $VERSION = '0.01';
 
 =item * C<_baseurl> Personalized base URL in the format: <identifier>.api.infobip.com.
 
-=item * C<_timeout> Request timeout in seconds, default is 60.
+=item * C<_timeout> Optional: Request timeout in seconds, default is 60.
+
+=item * C<_to_override> Optional: An override for the C<to> parameter of C<SMS::Send-E<gt>send_sms()>.
+
+=item * C<_skip_send> Optional: An boolean, if true don't perform the API request to actually send the SMS.
 
 =back
 
@@ -110,6 +120,8 @@ sub send_sms {
     );
 
     my $endpoint_url = "https://" . $self->{_baseurl} . "/sms/2/text/advanced";
+
+    return 1 if $self->{_skip_send};
 
     my $response = HTTP::Tiny->new(%http_attributes)->post(
         $endpoint_url,
@@ -179,19 +191,13 @@ L<https://metacpan.org/release/SMS-Send-Infobip>
 
 =back
 
-
-=head1 ACKNOWLEDGEMENTS
-
-
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2023 by David Gustafsson.
+This software is Copyright (C) 2023 by David Gustafsson.
 
 This is free software, licensed under:
 
   The Artistic License 2.0 (GPL Compatible)
-
-
 =cut
 
 1; # End of SMS::Send::Infobip

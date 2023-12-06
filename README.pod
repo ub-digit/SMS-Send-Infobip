@@ -31,7 +31,9 @@ An SMS::Send driver providing integration with the Infobib SMS API.
         _apikey => 'apikey',
         _sender => 'Sender',
         _baseurl => '<identifier>.api.infobip.com',
-        _timeout => 60
+        _timeout => 60,
+        _to_override => '41793026728',
+        _skip_send => 1
     );
 
 =head3 Parameters
@@ -44,7 +46,11 @@ An SMS::Send driver providing integration with the Infobib SMS API.
 
 =item * C<_baseurl> Personalized base URL in the format: <identifier>.api.infobip.com.
 
-=item * C<_timeout> Request timeout in seconds, default is 60.
+=item * C<_timeout> Optional: Request timeout in seconds, default is 60.
+
+=item * C<_to_override> Optional: An override for the C<to> parameter of C<SMS::Send-E<gt>send_sms()>.
+
+=item * C<_skip_send> Optional: An boolean, if true don't perform the API request to actually send the SMS.
 
 =back
 
