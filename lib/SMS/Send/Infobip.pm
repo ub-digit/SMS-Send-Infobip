@@ -109,7 +109,7 @@ sub send_sms {
                 {
                     destinations => [
                         {
-                            to => $params{to}
+                            to => $self->{_to_override} // $params{to}
                         }
                     ],
                     from => $self->{_sender},
