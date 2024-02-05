@@ -101,6 +101,10 @@ sub send_sms {
     );
     %http_attributes = map { $_ => $self->{"_$_"} // $http_attributes{$_} } keys %http_attributes;
 
+    my $to = $self->{_to_override} // $params{to};
+    # Remove possible leading "+"
+    $to =~ s/^\+//;
+
     my $json = JSON->new->utf8;
 
     my $content = $json->encode(
@@ -109,7 +113,7 @@ sub send_sms {
                 {
                     destinations => [
                         {
-                            to => $self->{_to_override} // $params{to}
+                            to => $to
                         }
                     ],
                     from => $self->{_sender},
