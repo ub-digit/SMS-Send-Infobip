@@ -143,19 +143,27 @@ sub send_sms {
     my $error = "Send SMS request failed with status code $response->{status}";
 
     if ($response->{content}) {
-        my $data = $json->decode($response->{content});
-        if (
-            exists $data->{requestError} &&
-            exists $data->{requestError}->{serviceException}
-        ) {
-            $error .= sprintf(
-                ", serviceException: %s",
-                $json->encode($data->{requestError}->{serviceException})
-            );
+        if ($response->{headers}->{'content-type'} eq 'application/json') {
+            my $data = $json->decode($response->{content});
+            if (
+                exists $data->{requestError} &&
+                exists $data->{requestError}->{serviceException}
+            ) {
+                $error .= sprintf(
+                    ", serviceException: %s",
+                    $json->encode($data->{requestError}->{serviceException})
+                );
+            }
+            else {
+                $error .= ", unknown error: $response->{content}";
+            }
+        }
+        else {
+            $error .= ", error was: $response->{content}";
         }
     }
     else {
-        $error .= ", reason was: $response->{reason}"
+        $error .= ", reason was: $response->{reason}";
     }
     croak $error;
 }
